@@ -5,8 +5,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import io.github.libxposed.api.XposedInterface;
 import io.github.libxposed.api.XposedModule;
+import io.github.libxposed.api.XposedModuleInterface.ModuleLoadedParam;
+import io.github.libxposed.api.XposedModuleInterface.SystemServerLoadedParam;
 
 @SuppressLint("PrivateApi")
 public class Hooker extends XposedModule {
@@ -14,8 +15,9 @@ public class Hooker extends XposedModule {
     private static final String TAG = "HyperInstaller";
     private static boolean fakeCTS = false;
 
-    public Hooker(@NonNull XposedInterface base, @NonNull ModuleLoadedParam param) {
-        super(base, param);
+    @Override
+    public void onModuleLoaded(@NonNull ModuleLoadedParam param) {
+        // initialization happens here now, not in the constructor
     }
 
     @Override
