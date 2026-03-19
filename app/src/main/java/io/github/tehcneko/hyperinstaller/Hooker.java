@@ -39,8 +39,11 @@ public class Hooker extends XposedModule {
         for (var method : cls.getDeclaredMethods()) {
             var name = method.getName();
             if ("hookChooseBestActivity".equals(name) ||
-                    "updateDefaultPkgInstallerLocked".equals(name) ||
-                    "assertValidApkAndInstaller".equals(name)) {
+                    "updateDefaultPkgInstallerLocked".equals(name)) {
+                Log.d(TAG, "hooking method " + name);
+                hook(method).intercept(chain -> chain.proceed());
+                deoptimize(method);
+            } else if ("assertValidApkAndInstaller".equals(name)) {
                 Log.d(TAG, "hooking method " + name);
                 hook(method).intercept(chain -> {
                     fakeCTS = true;
