@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 
 import io.github.libxposed.api.XposedModule;
 import io.github.libxposed.api.XposedModuleInterface.ModuleLoadedParam;
-import io.github.libxposed.api.XposedModuleInterface.SystemServerLoadedParam;
+import io.github.libxposed.api.XposedModuleInterface.SystemServerStartingParam;
 
 @SuppressLint("PrivateApi")
 public class Hooker extends XposedModule {
@@ -17,11 +17,11 @@ public class Hooker extends XposedModule {
 
     @Override
     public void onModuleLoaded(@NonNull ModuleLoadedParam param) {
-        // initialization happens here now, not in the constructor
+        // no-op, initialization not needed
     }
 
     @Override
-    public void onSystemServerLoaded(@NonNull SystemServerLoadedParam param) {
+    public void onSystemServerStarting(@NonNull SystemServerStartingParam param) {
         try {
             hookPackageManagerServiceImpl(param.getClassLoader());
         } catch (Throwable t) {
@@ -35,8 +35,8 @@ public class Hooker extends XposedModule {
     }
 
     private void hookPackageManagerServiceImpl(ClassLoader classLoader) throws ClassNotFoundException {
-        var packageManagerServiceImpl = classLoader.loadClass("com.android.server.pm.PackageManagerServiceImpl");
-        for (var method : packageManagerServiceImpl.getDeclaredMethods()) {
+        var cls = classLoader.loadClass("com.android.server.pm.PackageManagerServiceImpl");
+        for (var method : cls.getDeclaredMethods()) {
             var name = method.getName();
             if ("hookChooseBestActivity".equals(name) ||
                     "updateDefaultPkgInstallerLocked".equals(name) ||
